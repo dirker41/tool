@@ -1,0 +1,8 @@
+alias grepc='_(){ grep -r $1 . --include=*.c;}; _'
+alias greph='_(){ grep -r $1 . --include=*.h;}; _'
+alias grepf='_(){ grep -r $1 . --exclude=*.[ch];}; _'
+
+alias code='/mnt/c/Users/bryantli/AppData/Local/Programs/Microsoft\ VS\ Code/Code.exe'
+
+git config --global alias.k '!gitk &'
+git config --global alias.st status

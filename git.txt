@@ -1,0 +1,16 @@
+git stash
+
+git stash apply
+
+git pull --rebase
+
+git clone
+
+git cherry-pick  SHA1
+
+#create new_branch 
+git checkout -b {new_branch}
+
+
+#destroy latest commit
+git reset HEAD^
