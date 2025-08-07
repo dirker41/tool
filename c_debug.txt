@@ -1,0 +1,66 @@
+#define BRYANT_DEBUG(fmt, args...) \
+  do  \
+  { \
+    if(1) {                        \
+		  fprintf(stderr, "\r\n%s %s "fmt, __FILE__, __FUNCTION__, ##args); \
+		  fprintf(stderr, "\r\n"); \
+	  } \
+  } while(0)
+
+do  \
+  { \
+    if(1) {                        \
+		  printk(KERN_EMERG "\r\n%s %s "fmt, __FILE__, __FUNCTION__, ##args); \
+		  printk(KERN_EMERG "\r\n"); \
+	  } \
+  } while(0)
+  
+  #include <stdio.h>
+
+void 
+dumpHex(const char *prefix, const void* data, size_t size) 
+{
+	char ascii[17];
+	size_t i;
+	char outHex[128];
+	
+	ascii[16] = '\0';
+
+	SYS_PRINTF("\r\n%s\r\n", prefix);
+
+	for (i = 0; i < size; ++i) {
+		int offset=0;
+		if(i%16==0)
+		{
+			outHex[0]=0x00;
+		}
+
+		if((i%16)==8){
+			snprintf(outHex+24, sizeof(outHex), " ");
+		}
+
+		if((i%16)>=8)
+		{
+			offset=1;
+		}
+
+		snprintf(outHex+(i%16)*3+offset, sizeof(outHex), "%02X ", ((unsigned char*)data)[i]);
+
+		if (((unsigned char*)data)[i] >= ' ' && ((unsigned char*)data)[i] <= '~') {
+			ascii[i % 16] = ((unsigned char*)data)[i];
+		} else {
+			ascii[i % 16] = '.';
+		}
+
+		if((i+1) % 16 == 0 || i+1 == size)
+		{
+			if(i+1==size)
+			{
+				ascii[(i%16)+1]=0x00;
+			}
+
+			snprintf(outHex+49, sizeof(outHex), " | %s", ascii);
+			SYS_PRINTF("%s \r\n", outHex);
+		}
+	}
+}

@@ -1,0 +1,17 @@
+#linux kernel source code
+https://elixir.bootlin.com/linux/v3.18.140/source/tools/perf/builtin-top.c
+
+#linux random
+https://zhuanlan.zhihu.com/p/12565930468
+
+#linux haveged source code
+https://github.com/jirka-h/haveged/tree/master/src
+
+#regex practise
+https://regex101.com/
+
+#diffchecker
+https://www.diffchecker.com/zh-Hant/
+
+#HexToDec
+https://www.convertworld.com/zh-hant/numerals/hexadecimal.html

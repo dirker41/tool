@@ -1,0 +1,1 @@
+docker run --name <container-name> -it -d -v <local-dir>:<container-dir> <image-name> bash

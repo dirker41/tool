@@ -1,16 +1,30 @@
+git clone ${url}
+
 git stash
 
 git stash apply
 
 git pull --rebase
 
-git clone
+git push
 
-git cherry-pick  SHA1
+git cherry-pick  ${SHA1}
 
 #create new_branch 
 git checkout -b {new_branch}
 
-
 #destroy latest commit
 git reset HEAD^
+
+#Search Git commit history by author
+git log --oneline --author="Sherly"
+
+#Search the Git commit history by a specific commit message.
+git log --oneline --grep="WTF"
+
+
+
+
+#if git clone fail with err msg:  SSL certificate problem: unable to get local issuer certificate
+#windows  cert ignore 
+git config --global http.sslVerify false
