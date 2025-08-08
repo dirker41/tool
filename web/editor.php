@@ -1,163 +1,171 @@
-<?php
-include $_SERVER['DOCUMENT_ROOT'].'/lib/lib.php';
-
-if(!lib_ip_in_white_list())
-{
-	header('Location: http://10.96.1.1');
-	exit();
-}
-?>
 <html>
 <head>
 <?php
 
-    $match_arr=array("product", "file");
-    $DB_TABLE_NAME="text_file";
+	$match_arr=array("product", "file");
+	$DB_TABLE_NAME="text_file";
+	$DB_FULL_PATH="./db_file/cmd.db";
 
-    class SQLiteDB extends SQLite3
-    {
-        function __construct($path)
-        {
-            $this->open($path);
-        }
-    }
+	class SQLiteDB extends SQLite3
+	{
+		function __construct($path)
+		{
+			$this->open($path);
+		}
+	}
 
-    function printn($str) 
-    {
-        /*
-        echo "?>";
-        echo "<script>";
-        echo 'alert("'.$str.'")';
-        echo "</script>";
-        echo "<?php\n";
-        */
-        echo $str."<br>\n";
-    } 
+	function printn($str) 
+	{
+		/*
+		echo "?>";
+		echo "<script>";
+		echo 'alert("'.$str.'")';
+		echo "</script>";
+		echo "<?php\n";
+		*/
+		echo $str."<br>\n";
+	} 
    
-    function open_db() 
-    {
-        $path="./db_file/cmd.db";
-        $db = new SQLiteDB($path);
-        if(!$db){
-            echo $db->lastErrorMsg();
-        }
+	function open_db($path) 
+	{
+		$db = new SQLiteDB($path);
+		if(!$db){
+			echo $db->lastErrorMsg();
+		}
 
-        return $db;
-    }
+		return $db;
+	}
 
-    function execute_sql($db, $cmd) 
-    {
-        $ret = $db->exec($cmd);
-        if(!$ret){
-            echo "ERROR:".$db->lastErrorMsg()."  ".$cmd."<br>";
-        } 
-    } 
+	function execute_sql($db, $cmd) 
+	{
+		$ret = $db->exec($cmd);
+		if(!$ret){
+			echo "ERROR:".$db->lastErrorMsg()."  ".$cmd."<br>";
+		} 
+	} 
 
-    function create_text_file($db) 
-    {
-        execute_sql($db, "DROP table text_file");
-        execute_sql($db, "CREATE TABLE text_file (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            file text NOT NULL,
-            owner text NOT NULL,
-            product text NOT NULL,
-            context text NOT NULL
-         );");
-    } 
+	function create_text_file($db) 
+	{
+		execute_sql($db, "DROP table text_file");
+		execute_sql($db, "CREATE TABLE text_file (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			file text NOT NULL,
+			owner text NOT NULL,
+			product text NOT NULL,
+			context text NOT NULL
+		 );");
+	} 
 
-    function query_sql($db, $cmd) 
-    {
-        return $db->query($cmd);
-    } 
+	function query_sql($db, $cmd) 
+	{
+		return $db->query($cmd);
+	} 
 
-    function create_query_select($db, $name, $cmd, $default) 
-    {
-        $out_str="$name:\n";
-        $out_str.='<select name="'.$name.'">';
-        $ret=$db->query($cmd);
-        $selected="";
-        $out_array= array();
-        
-        #printn($cmd);
+	function create_query_select($db, $name, $cmd, $default) 
+	{
+		$out_str="$name:\n";
+		$out_str.='<select name="'.$name.'">';
+		$ret=$db->query($cmd);
+		$selected="";
+		$out_array= array();
+		
+		#printn($cmd);
 
-        while($row = $ret->fetchArray())
-        {
-            array_push($out_array, $row[$name]);
-        }
+		while($row = $ret->fetchArray())
+		{
+			array_push($out_array, $row[$name]);
+		}
 
-        if(count($out_array)>0)
-        {
-            $selected=$out_array[0];
-        }
-        
-        for($i=0; $i<count($out_array); $i++ ) 
-        {
-            #printn($out_array[$i]);
+		if(count($out_array)>0)
+		{
+			$selected=$out_array[0];
+		}
+		
+		for($i=0; $i<count($out_array); $i++ ) 
+		{
+			#printn($out_array[$i]);
 
-            if($out_array[$i]==$default)
-            {
-                $out_str.="<option selected>".$out_array[$i]."</option>";
-                $selected=$out_array[$i];
-            }
-            else 
-            {
-                $out_str.="<option>".$out_array[$i]."</option>";
-            }
-        }
+			if($out_array[$i]==$default)
+			{
+				$out_str.="<option selected>".$out_array[$i]."</option>";
+				$selected=$out_array[$i];
+			}
+			else 
+			{
+				$out_str.="<option>".$out_array[$i]."</option>";
+			}
+		}
 
-        $out_str.="</select>\n";
+		$out_str.="</select>\n";
 
-        return array($out_str, $selected);
-    }
+		return array($out_str, $selected);
+	}
 
-    function create_select($db, $name, $default) 
-    {
-        $cmd="SELECT DISTINCT ".$name." FROM text_file";
-        return create_query_select($db, $name, $cmd, $default);
-    }
+	function create_select($db, $name, $default) 
+	{
+		$cmd="SELECT DISTINCT ".$name." FROM text_file";
+		return create_query_select($db, $name, $cmd, $default);
+	}
 
-    $db=open_db();
-    #printn("open db");
-/*
-    create_text_file($db);
+	function create_db($path) 
+	{
+		$cmd="SELECT DISTINCT ".$name." FROM text_file";
+		return create_query_select($db, $name, $cmd, $default);
+	}
+	
+	//check DB file exist
+	if(!file_exists($DB_FULL_PATH))
+	{
+		fopen($DB_FULL_PATH, "w");
+	}
 
-    execute_sql($db, "INSERT INTO text_file 
-    (file, owner, product, context) VALUES 
-    ('test', 'public', 'g7860a_ds3','text1');");
+	$db=open_db($DB_FULL_PATH);
 
+	// check table exist
+	$query = "SELECT name FROM sqlite_master WHERE type='table' AND name='" . SQLite3::escapeString($DB_TABLE_NAME) . "'";
+	$result = $db->query($query);
 
-    $ret=$db->query("select * from text_file;");
+	// creta table
+	if (!$result->fetchArray()) 
+	{
+		create_text_file($db);
+	}
 
-    $result=array();
+	$query = "SELECT product FROM ".$DB_TABLE_NAME." WHERE product='tips'";
+	//echo $query;
 
-    while($row = $ret->fetchArray() ){
-        echo "id = ". $row['id'] . "<br>";
-        echo "file = ". $row['file'] . "<br>";
-        echo "owner = ". $row['owner'] . "<br>";
-        echo "product = ". $row['product'] . "<br>";
-        echo "context = ". $row['context'] . "<br>";
+	// create first row
+	$result = $db->query($query);
 
-        array_push($result, $row);
-    }
-*/
+	if (!$result->fetchArray()) 
+	{
+		$cmd="INSERT INTO text_file 
+		(file, owner, product, context) VALUES 
+		('git', 'public', 'tips','git k');";
+
+		execute_sql($db, $cmd);
+
+		$_POST['product']='tips';
+		$_POST['file']='git';
+	}
 ?>
 <title>
 <?PHP
 if(isset($_POST['load']))
 {
-    echo $_POST['file'];
+	echo $_POST['file'];
 }
 elseif (isset($_POST['save'])) 
 {
-    echo $_POST['file'];
+	echo $_POST['file'];
 }
 elseif (isset($_POST['save_as'])) 
 {
-    echo $_POST['save_file'];
+	echo $_POST['save_file'];
 }
 else 
 {
-    echo "editor";
+	echo "editor";
 }
 ?>
 </title>
@@ -165,67 +173,67 @@ else
 <body>
 <form action="" method="post">
 <?PHP
-    $out_str=create_select($db, "product", $_POST['product']);
-    echo $out_str[0];
-    #echo "<br>";
+	$out_str=create_select($db, "product", $_POST['product']);
+	echo $out_str[0];
+	#echo "<br>";
 ?>
 <button type="submit" name="load_product">load_product</button>
 <?PHP
-    $cmd="SELECT file FROM ".$DB_TABLE_NAME." where product=='".$_POST['product']."' ORDER BY file;";
-    $save_as_err=0;
+	$cmd="SELECT file FROM ".$DB_TABLE_NAME." where product=='".$_POST['product']."' ORDER BY file;";
+	$save_as_err=0;
 
-    if(isset($_POST['save_as']) && $_POST['save_file']!="")
-    {
-        $arr=array("product", "save_file");
-        $insert_cmd="SELECT count(context) FROM text_file WHERE ";
-        $insert_cmd.="product=='".$_POST["product"]."' AND ";
-        $insert_cmd.="file=='".$_POST["save_file"]."' ; ";
+	if(isset($_POST['save_as']) && $_POST['save_file']!="")
+	{
+		$arr=array("product", "save_file");
+		$insert_cmd="SELECT count(context) FROM text_file WHERE ";
+		$insert_cmd.="product=='".$_POST["product"]."' AND ";
+		$insert_cmd.="file=='".$_POST["save_file"]."' ; ";
 
-        $ret=$db->query($insert_cmd);
+		$ret=$db->query($insert_cmd);
 
-        if($row = $ret->fetchArray())
-        {
-            if($row["count(context)"]==0)
-            {
-                $editor=str_replace("'", "''", $_POST['editor']);
+		if($row = $ret->fetchArray())
+		{
+			if($row["count(context)"]==0)
+			{
+				$editor=str_replace("'", "''", $_POST['editor']);
 
-                $insert_cmd="INSERT INTO ".$DB_TABLE_NAME." 
-                (file, owner, product, context) VALUES 
-                ('".$_POST['save_file']."', 'public', '".$_POST['product']."', '".$editor."');";
-                execute_sql($db, $insert_cmd);
-            }
-            else 
-            {
-                $save_as_err=1;
-            }
-        }
+				$insert_cmd="INSERT INTO ".$DB_TABLE_NAME." 
+				(file, owner, product, context) VALUES 
+				('".$_POST['save_file']."', 'public', '".$_POST['product']."', '".$editor."');";
+				execute_sql($db, $insert_cmd);
+			}
+			else 
+			{
+				$save_as_err=1;
+			}
+		}
 
-        $out_str=create_query_select($db, "file", $cmd, $_POST['save_file']);
-    }
-    else
-    {
-        $out_str=create_query_select($db, "file", $cmd, $_POST['file']);
-    }
-    echo $out_str[0];
+		$out_str=create_query_select($db, "file", $cmd, $_POST['save_file']);
+	}
+	else
+	{
+		$out_str=create_query_select($db, "file", $cmd, $_POST['file']);
+	}
+	echo $out_str[0];
 ?>
 <button type="submit" name="load">load</button>
 <button type="submit" name="save">save</button>
 <?PHP
 if(isset($_POST['save']))
 {
-    $arr=array("product", "file");
+	$arr=array("product", "file");
 
-    $cmd="UPDATE text_file set context='".$_POST['editor']."' where ";
+	$cmd="UPDATE text_file set context='".$_POST['editor']."' where ";
 
-    foreach ($arr as &$condition) 
-    {
-        $cmd.=$condition."=='".$_POST[$condition]."' AND ";
-    }
+	foreach ($arr as &$condition) 
+	{
+		$cmd.=$condition."=='".$_POST[$condition]."' AND ";
+	}
 
-    $cmd.='1=1;';
+	$cmd.='1=1;';
 
-    printn($cmd);
-    execute_sql($db, $cmd);
+	printn($cmd);
+	execute_sql($db, $cmd);
 }
 ?>
 <!--
@@ -233,12 +241,12 @@ if(isset($_POST['save']))
 <?PHP
 if(isset($_POST['delete']))
 {
-    $cmd="DELETE  FROM ".$DB_TABLE_NAME." WHERE ";
-    $cmd.="product='".$_POST['product']."' and " ;
-    $cmd.="file='".$_POST['file']."';" ;
+	$cmd="DELETE  FROM ".$DB_TABLE_NAME." WHERE ";
+	$cmd.="product='".$_POST['product']."' and " ;
+	$cmd.="file='".$_POST['file']."';" ;
 
-    printn($cmd);
-    execute_sql($db, $cmd);
+	printn($cmd);
+	execute_sql($db, $cmd);
 }
 ?>
 -->
@@ -249,14 +257,14 @@ if(isset($_POST['delete']))
 <?PHP
 if(isset($_POST['load']))
 {
-    echo $_POST['file'];
+	echo $_POST['file'];
 }
 else if(isset($_POST['save_as']) && $_POST['save_file']!="")
 {
-    if($save_as_err!=0)
-    {
-        echo "file name must unique!";
-    }
+	if($save_as_err!=0)
+	{
+		echo "file name must unique!";
+	}
 }
 ?>
 </textarea>
@@ -265,38 +273,38 @@ else if(isset($_POST['save_as']) && $_POST['save_file']!="")
 <?PHP
 if(isset($_POST['load']))
 {
-    $arr=array("product", "file");
+	$arr=array("product", "file");
 
-    $cmd="SELECT context FROM text_file WHERE ";
+	$cmd="SELECT context FROM text_file WHERE ";
 
-    foreach ($arr as &$condition) 
-    {
-        $cmd.=$condition."=='".$_POST[$condition]."' AND ";
-    }
+	foreach ($arr as &$condition) 
+	{
+		$cmd.=$condition."=='".$_POST[$condition]."' AND ";
+	}
 
-    $cmd.="1==1;";
-    #printn($cmd);
-    $ret=$db->query($cmd);
+	$cmd.="1==1;";
+	#printn($cmd);
+	$ret=$db->query($cmd);
 
-    while($row = $ret->fetchArray())
-    {
-        echo $row["context"];
-    }
+	while($row = $ret->fetchArray())
+	{
+		echo $row["context"];
+	}
 }
 else if(isset($_POST['save']) || isset($_POST['save_as']))
 {
-    echo $_POST['editor'];
+	echo $_POST['editor'];
 }
 else if(isset($_POST['trim']))
 {
-    $text=$_POST['editor'];
+	$text=$_POST['editor'];
 
-    while(strpos($text, "    ")!=false)
-    {
-        $text=str_replace("    ", "", $text);
-    }
+	while(strpos($text, "    ")!=false)
+	{
+		$text=str_replace("    ", "", $text);
+	}
 
-    echo $text;
+	echo $text;
 }
 
 #$cmd="DELETE FROM ".$DB_TABLE_NAME." WHERE id=29;";

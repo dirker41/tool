@@ -10,6 +10,13 @@ git push
 
 git cherry-pick  ${SHA1}
 
+git blame
+
+gitk
+
+#gitk with &
+git k
+
 #create new_branch 
 git checkout -b {new_branch}
 

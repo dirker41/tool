@@ -1,0 +1,2 @@
+#windows CMD
+mklink vmlinux.bix \\wsl.localhost\Ubuntu-24.04\home\bryant\git\realtek-sdk3-v3.6.8.55120\image\vmlinux.bix

@@ -6,3 +6,40 @@ alias code='/mnt/c/Users/bryantli/AppData/Local/Programs/Microsoft\ VS\ Code/Cod
 
 git config --global alias.k '!gitk &'
 git config --global alias.st status
+
+#fix local host
+vi /etc/hosts
+192.168.1.1  ${host_address}
+
+
+
+#myBuild
+#!/bin/bash
+
+#${build_cmd1}
+#${build_cmd2}
+
+default=${build_cmd1}
+target=${default}
+
+if [ $# -ge 1 ] ; then
+    if [ $1 == "clean" ] ; then
+        #${build_clean_cmd}
+        exit 0
+    fi
+fi
+
+${target}
+
+
+#Uboot
+
+setenv tftp_dir __${tftp_dir}
+setenv bootcmd 'run tftpboot'
+
+setenv serverip __${server_ip}
+setenv ipaddr __${my_ip}
+
+setenv tftpboot 'tftp 0x81000000 ${tftp_dir}/__${xxx.bin}; bootm'
+
+savee
