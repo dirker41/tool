@@ -1,0 +1,31 @@
+wsl
+wsl config C:\Users\bryant\.wslconfig
+#Unix UTF-8 without BOM
+#C:\Users\bryant\.wslconfig
+#[https://learn.microsoft.com/en-us/windows/wsl/wsl-config#configure-global-options-with-wslconfig](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#configure-global-options-with-wslconfig)
+
+# Settings apply across all Linux distros running on WSL 2
+[wsl2]
+# Limits VM memory to use no more than 4 GB, this can be set as whole numbers using GB or MB
+memory=32GB
+# Sets the VM to use two virtual processors
+processors=12
+# Sets amount of swap storage space to 8GB, default is 25% of available RAM
+swap=8GB
+#swap=0
+#An absolute Windows path to the swap virtual hard disk.
+swapFile="D:\\bryant Documents\\Documents\\WSL\\swap\\swap.vhdx"
+# Disable page reporting so WSL retains all allocated memory claimed from Windows and releases none back when free
+#pageReporting=false
+# Turn on default connection to bind WSL 2 localhost to Windows localhost
+localhostforwarding=true
+wsl list
+wsl --list --all
+wsl --list --online
+wsl shutdown all
+wsl --shutdown
+wsl 移除安裝
+wsl --unregister Ubuntu-22.04
+wsl 轉移磁碟
+wsl --export Ubuntu-20.04 c:\k_temp\wcc-ubuntu-20-04-wsl.tar
+wsl --import Ubuntu-20.04-InDiskD d:\wsl\ubuntu-InDiskD c:\k_temp\wcc-ubuntu-20-04-wsl.tar

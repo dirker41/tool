@@ -112,6 +112,31 @@
 		$cmd="SELECT DISTINCT ".$name." FROM text_file";
 		return create_query_select($db, $name, $cmd, $default);
 	}
+
+	function create_default_row($db) 
+	{
+		$cmd="INSERT INTO text_file 
+		(file, owner, product, context) VALUES 
+		('git', 'public', 'tips','git k');";
+
+		execute_sql($db, $cmd);
+	}
+
+	function create_new_row($db) 
+	{
+		$cmd="INSERT INTO text_file 
+		(file, owner, product, context) VALUES 
+		('tmp', 'public', 'ready_to_use','git k');";
+
+		execute_sql($db, $cmd);
+	}
+
+	function delete_row($db) 
+	{
+		$cmd="delete from 'text_file' where id=8;";
+
+		execute_sql($db, $cmd);
+	}
 	
 	//check DB file exist
 	if(!file_exists($DB_FULL_PATH))
@@ -139,14 +164,25 @@
 
 	if (!$result->fetchArray()) 
 	{
-		$cmd="INSERT INTO text_file 
-		(file, owner, product, context) VALUES 
-		('git', 'public', 'tips','git k');";
+		create_default_row($db);
+	}
 
-		execute_sql($db, $cmd);
+	if(!isset($_POST['product']))
+	{
+		$query = "SELECT * FROM ".$DB_TABLE_NAME." WHERE product='tips'";
 
-		$_POST['product']='tips';
-		$_POST['file']='git';
+		$ret=$db->query($query);
+
+		if($row = $ret->fetchArray())
+		{
+			$_POST['product']=$row['product'];
+			$_POST['file']=$row['file'];
+			$_POST['editor']=$row['context'];
+
+			//echo $_POST['product'] ."<BR>";
+			//echo $_POST['file'] ."<BR>";
+			//echo $_POST['editor'] ."<BR>";
+		}
 	}
 ?>
 <title>
@@ -305,6 +341,10 @@ else if(isset($_POST['trim']))
 	}
 
 	echo $text;
+}
+else
+{
+	echo $_POST['editor'];
 }
 
 #$cmd="DELETE FROM ".$DB_TABLE_NAME." WHERE id=29;";
