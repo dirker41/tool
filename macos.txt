@@ -1,0 +1,2 @@
+#tx/rx counter
+netstat -ib

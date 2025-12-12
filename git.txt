@@ -29,7 +29,37 @@ git log --oneline --author="Sherly"
 #Search the Git commit history by a specific commit message.
 git log --oneline --grep="WTF"
 
+git init
 
+#add file to git tracking
+git add ${file_name}
+
+#save change and name this save
+git commit -m "${msg}"
+
+#switch to specific commit
+git checkout ${SHA1}
+
+#switch to specific branch
+git checkout ${branch_name}
+
+#temporary storage
+git stash
+
+#get temporary storage
+git stash apply
+
+#show log
+git log
+
+#show all log
+git reflog
+
+
+#remote repo cherry-pick
+git remote add ${name} ${url}
+git fetch --all
+git cherry-pick ${sha256}
 
 
 #if git clone fail with err msg:  SSL certificate problem: unable to get local issuer certificate
