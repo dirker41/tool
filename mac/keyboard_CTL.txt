@@ -1,0 +1,30 @@
+#terminal shortcut
+
+#move to line head, (Home)
+Control + A
+
+#move to line tail, (End)
+Control + e
+
+#move to previous space
+Option + <-
+
+#move to bnext space
+Option + ->
+
+#clear terminal
+Control + L
+
+#stop process
+Control + C
+
+#delete current to lline head char
+Control + U
+
+#delete current to lline tail char
+Control + K 
+
+# coding
+
+#add comment
+ctl + / 

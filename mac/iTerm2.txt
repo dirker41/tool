@@ -1,0 +1,17 @@
+setup Option 
+in iTerm2, press Command + , 
+left side "Profiles"
+top "Keys" label
+#load default
+right and buttom "Load Preset..."
+
+
+
+manual setup
+click + 
+set Keyboard Shortcut as Option + -> 
+set Action as Send Escape Sequence, and typing Esc+f
+
+set Keyboard Shortcut as Option + <-, Option + ^, Option + v
+set Action as Send Escape Sequence, and typing Esc+b, sc+k, Esc+j
+
