@@ -1,2 +1,5 @@
 #tx/rx counter
 netstat -ib
+
+
+alias grepl='_(){ grep $1 *.lua;}; _'
