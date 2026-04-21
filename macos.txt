@@ -3,3 +3,6 @@ netstat -ib
 
 
 alias grepl='_(){ grep $1 *.lua;}; _'
+
+#check UID occupy port 
+lsof -i :8080
